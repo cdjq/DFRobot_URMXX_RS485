@@ -12,8 +12,8 @@
 from __future__ import print_function
 import sys
 import os
-import time
-sys.path.append('../')
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
+
 from DFRobot_A111 import *
 
 sensor = DFRobot_A111(addr = 0x000E)
