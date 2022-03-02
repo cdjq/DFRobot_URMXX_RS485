@@ -181,9 +181,10 @@ FireBeetle-M0      |      √       |              |             |
 ## 历史
 
 - 2021/07/08 - 1.0.0 版本
+- 2022/03/02 - 1.0.1 版本
 
 
 ## 创作者
 
-Written by qsjhyy(yihuan.huang@dfrobot.com), 2021. (Welcome to our [website](https://www.dfrobot.com/))
+Written by qsjhyy(yihuan.huang@dfrobot.com), 2022. (Welcome to our [website](https://www.dfrobot.com/))
 

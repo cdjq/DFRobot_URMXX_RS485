@@ -182,6 +182,7 @@ FireBeetle-M0      |      √       |              |             |
 ## History
 
 - 2021/07/08 - Version 1.0.0 released.
+- 2022/03/02 - Version 1.0.1 released.
 
 
 ## Credits
