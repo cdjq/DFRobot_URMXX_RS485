@@ -157,14 +157,14 @@ RS01可检测紧密范围内的多个对象，支持单次测量以及连续扫�
 
 MCU                | SoftwareSerial | HardwareSerial |
 ------------------ | :------------: | :------------: |
-Arduino Uno        |       √        |       X        |
+Arduino Uno        |       √        |                |
 Mega2560           |       √        |       √        |
 Leonardo           |       √        |       √        |
-ESP32              |       X        |       √        |
-ESP8266            |       √        |       X        |
-micro:bit          |       X        |       X        |
-FireBeetle M0      |       X        |       √        |
-raspberry          |       X        |       √        |
+ESP32              |                |       √        |
+ESP8266            |       √        |                |
+micro:bit          |                |                |
+FireBeetle M0      |                |       √        |
+raspberry          |                |       √        |
 
 * DFRobot_RS01
 

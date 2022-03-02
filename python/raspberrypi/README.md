@@ -28,7 +28,7 @@ The unique characteristics of the RS01 radar sensor make it possible to identify
 ## Summary
 
 The library uses the RTU communication protocol and relies on the modbus_tk library. If you want to install and run the library you have to install its dependent libraries.
-The library, with radar RS01, can get the basic information, measurement parameters and measured data of the radar module, and can also change the basic information and measurement parameters.
+The library supports radar RS01 and allows user to get the basic information, measurement parameters and measured data of the radar module, and also change the basic information and measurement parameters.
 
 
 ## Installation
@@ -62,7 +62,7 @@ Download the library file before use, paste it into the specified directory, the
       @retval  the third element: the module communication address
       @retval  the fourth element: the module baud rate
       @retval  the fifth element: the module check bit and stop bit
-      @retval  the sixth element: firmware revision number
+      @retval  the sixth element: firmware version number
     '''
     def refreshBasicInfo(self):
 
@@ -70,11 +70,11 @@ Download the library file before use, paste it into the specified directory, the
       @brief read the module measured data
       @return list: 
       @retval  the first element: the number of objects currently detected
-      @retval  the second element: measured distance of the first object；the third element: measured intensity of the first object
-      @retval  the fourth element: measured distance of the second object；the fifth element: measured intensity of the second object
-      @retval  the sixth element: measured distance of the third object；the seventh element: measured intensity of the third object
-      @retval  the eighth element: measured distance of the fourth object；the ninth element: measured intensity of the fourth object
-      @retval  the tenth element: measured distance of the fifth object；the eleventh element: measured intensity of the fifth object
+      @retval  the second element: measured distance of the first object; the third element: measured intensity of the first object
+      @retval  the fourth element: measured distance of the second object; the fifth element: measured intensity of the second object
+      @retval  the sixth element: measured distance of the third object; the seventh element: measured intensity of the third object
+      @retval  the eighth element: measured distance of the fourth object; the ninth element: measured intensity of the fourth object
+      @retval  the tenth element: measured distance of the fifth object; the eleventh element: measured intensity of the fifth object
     '''
     def refreshMeasurementData(self):
 
@@ -167,4 +167,4 @@ Download the library file before use, paste it into the specified directory, the
 
 ## Credits
 
-Written by qsjhyy(yihuan.huang@dfrobot.com), 2021. (Welcome to our [website](https://www.dfrobot.com/))
+Written by qsjhyy(yihuan.huang@dfrobot.com), 2022. (Welcome to our [website](https://www.dfrobot.com/))

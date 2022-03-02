@@ -1,7 +1,7 @@
 /*!
  * @file  DFRobot_RS01.h
  * @brief  Define infrastructure of DFRobot_RS01 class
- * @details  get and configure the sensor basic information and measurement parameters, and get the sensor measurement information
+ * @details  Get and configure the sensor basic information and measurement parameters, and the sensor measurement information
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license  The MIT License (MIT)
  * @author  [qsjhyy](yihuan.huang@dfrobot.com)
@@ -16,18 +16,18 @@
 #include <Stream.h>
 #include <DFRobot_RTU.h>
 
-// #define ENABLE_DBG   //!< open the macro and you can see the details of the program
+// #define ENABLE_DBG   //!< Open the macro and you can see the details of the program
 #ifdef ENABLE_DBG
   #define DBG(...) {Serial.print("[");Serial.print(__FUNCTION__); Serial.print("(): "); Serial.print(__LINE__); Serial.print(" ] "); Serial.println(__VA_ARGS__);}
 #else
   #define DBG(...)
 #endif
 
-#define RS01_PID                     uint16_t(0x01E9)   ///< module PID (the highest two values are used as class to judge 00:SEN、01:DFR、10:TEL, the next 14 numbers as)(SEN0489)
+#define RS01_PID                     uint16_t(0x01E9)   ///< module PID (The highest two of 16-bit data are used to determine SKU type: 00: SEN, 01: DFR, 10: TEL, the next 14 are numbers.)(SEN0489)
 
 /* RS01 register address for basic information */
-#define RS01_PID_REG                 uint16_t(0x0000)   ///< module PID memory register, the default value is 0x01E9 (the highest two values are used as class to judge 00:SEN、01:DFR、10:TEL, the next 14 numbers as)(SEN0489)
-#define RS01_VID_REG                 uint16_t(0x0001)   ///< module VID memory register, the default value is 0x3343 (representative manufacturer is DFRobot)
+#define RS01_PID_REG                 uint16_t(0x0000)   ///< module PID memory register, the default value is 0x01E9 (The highest two of 16-bit data are used to determine SKU type: 00: SEN, 01: DFR, 10: TEL, the next 14 are numbers.)(SEN0489)
+#define RS01_VID_REG                 uint16_t(0x0001)   ///< module VID memory register, the default value is 0x3343 (represent manufacturer DFRobot)
 #define RS01_ADDR_REG                uint16_t(0x0002)   ///< memory register for module communication address, the default value is 0x000E, module device address(1~247)
 #define RS01_BAUDRATE_REG            uint16_t(0x0003)   ///< module baud rate memory register, the default value is 0x0008
 #define RS01_CHECKBIT_STOPBIT_REG    uint16_t(0x0004)   ///< module check bit and stop bit memory register, the default value is 0x0001
@@ -35,25 +35,25 @@
 
 /* RS01 register address of measurement data */
 #define RS01_TARGETS_NUMBER        uint16_t(0x0006)   ///< detect the current object numbers
-#define RS01_DISTANCE_TARGET1      uint16_t(0x0007)   ///< distance of object 1
+#define RS01_DISTANCE_TARGET1      uint16_t(0x0007)   ///< distance to object 1
 #define RS01_INTENSITY_TARGET1     uint16_t(0x0008)   ///< intensity of object 1
-#define RS01_DISTANCE_TARGET2      uint16_t(0x0009)   ///< distance of object 2
+#define RS01_DISTANCE_TARGET2      uint16_t(0x0009)   ///< distance to object 2
 #define RS01_INTENSITY_TARGET2     uint16_t(0x000A)   ///< intensity of object 2
-#define RS01_DISTANCE_TARGET3      uint16_t(0x000B)   ///< distance of object 3
+#define RS01_DISTANCE_TARGET3      uint16_t(0x000B)   ///< distance to object 3
 #define RS01_INTENSITY_TARGET3     uint16_t(0x000C)   ///< intensity of object 3
-#define RS01_DISTANCE_TARGET4      uint16_t(0x000D)   ///< distance of object 4
+#define RS01_DISTANCE_TARGET4      uint16_t(0x000D)   ///< distance to object 4
 #define RS01_INTENSITY_TARGET4     uint16_t(0x000E)   ///< intensity of object 4
-#define RS01_DISTANCE_TARGET5      uint16_t(0x000F)   ///< distance of object 5
+#define RS01_DISTANCE_TARGET5      uint16_t(0x000F)   ///< distance to object 5
 #define RS01_INTENSITY_TARGET5     uint16_t(0x0010)   ///< intensity of object 5
 
 /* RS01 configure register address */
-#define MEASUREMENT_START_POSITION         uint16_t(0x0011)   ///< configure register at measurement start position, the default value is 0x00C8
-#define MEASUREMENT_END_POSITION           uint16_t(0x0012)   ///< configure register at measurement stop position, the default value is 0x1770
-#define RS01_START_THRESHOLD               uint16_t(0x0013)   ///< configure register for the initial threshold, the default value is 0x0190
-#define RS01_END_THRESHOLD                 uint16_t(0x0014)   ///< configure register for the end threshold, the default value is 0x0190
-#define RS01_MODULE_SENSITIVITY            uint16_t(0x0015)   ///< configure register for the module sensitivity, the default value is 0x0002
-#define RS01_COMPARISON_OFFSET             uint16_t(0x0016)   ///< configure register for the comparison offset, the default value is 0x0000
-#define RS01_RESET_FACTORY                 uint16_t(0x0017)   ///< restore factory setting
+#define MEASUREMENT_START_POSITION         uint16_t(0x0011)   ///< measurement start position config register, the default value is 0x00C8
+#define MEASUREMENT_END_POSITION           uint16_t(0x0012)   ///< measurement stop position config register, the default value is 0x1770
+#define RS01_START_THRESHOLD               uint16_t(0x0013)   ///< initial threshold config register, the default value is 0x0190
+#define RS01_END_THRESHOLD                 uint16_t(0x0014)   ///< end threshold config register, the default value is 0x0190
+#define RS01_MODULE_SENSITIVITY            uint16_t(0x0015)   ///< module sensitivity config register, the default value is 0x0002
+#define RS01_COMPARISON_OFFSET             uint16_t(0x0016)   ///< comparison offset config register, the default value is 0x0000
+#define RS01_RESET_FACTORY                 uint16_t(0x0017)   ///< restore to factory setting
 
 class DFRobot_RS01
 {
@@ -67,8 +67,8 @@ public:
    */
   typedef struct
   {
-    uint16_t PID;   /**< module PID, the default value is 0x01E9 (the highest two values are used as class to judge 00: SEN、01: DFR、10: TEL, the next 14 numbers as num)(SEN0489) */
-    uint16_t VID;   /**< module VID, the default value is 0x3343 (representative manufacturer is DFRobot) */
+    uint16_t PID;   /**< module PID, the default value is 0x01E9 (The highest two of 16-bit data are used to determine SKU type: 00: SEN, 01: DFR, 10: TEL, the next 14 are numbers.)(SEN0489) */
+    uint16_t VID;   /**< module VID, the default value is 0x3343 (represent manufacturer DFRobot) */
     uint16_t modbusAddr;   /**< module communication address, the default value is 0x000E, module device address(1~247) */
     uint16_t baudrate;   /**< module baud rate, the default value is 0x0009(1000000) */
     uint8_t stopbit;   /**< stop bit: 1bit; 2bit */
@@ -78,12 +78,12 @@ public:
 
   /**
    * @struct sMeasurementConfig_t
-   * @brief device information structure in modbus mode
+   * @brief Device information structure in modbus mode
    */
   typedef struct
   {
-    uint16_t startPosition;   /**< current set value at measurement start position, 0x0046~0x19C8, the value can't be greater than the set value at stop position */
-    uint16_t stopPosition;   /**< current set value at measurement stop position, 0x0046~0x19C8, the value can't be less than the set value at start position */
+    uint16_t startPosition;   /**< current measurement start position set value, 0x0046~0x19C8, can't be greater than the set value at stop position */
+    uint16_t stopPosition;   /**< current measurement stop position set value, 0x0046~0x19C8, can't be less than the set value at start position */
     uint16_t initialThreshold;   /**< current initial threshold set value */
     uint16_t endThreshold;   /**< current end threshold set value */
     uint16_t moduleSensitivity;   /**< current module sensitivity set value */
@@ -92,7 +92,7 @@ public:
 
   /**
    * @enum  eBaudrateMode_t
-   * @brief the module supports setting baud rate value
+   * @brief Available baud rate for the module
    */
   typedef enum
   {
@@ -109,7 +109,7 @@ public:
 
   /**
    * @enum  eCheckBitMode_t
-   * @brief the module supports setting check bit mode
+   * @brief  Available check bit mode for the module 
    */
   typedef enum
   {
@@ -120,7 +120,7 @@ public:
 
   /**
    * @enum  eStopBitMode_t
-   * @brief the module supports setting stop bit mode
+   * @brief Available stop bit mode for the module 
    */
   typedef enum
   {
@@ -139,7 +139,7 @@ public:
 
   /**
    * @fn begin
-   * @brief initialization function
+   * @brief init function
    * @param _serial serial ports for communication, supporting hard and soft serial ports
    * @return int type, means returning initialization status
    * @retval 0 NO_ERROR
@@ -150,7 +150,7 @@ public:
 
   /**
    * @fn refreshBasicInfo
-   * @brief retrieve the basic information from the sensor and buffer it into the structure basicInfo that stores information
+   * @brief Retrieve the basic information from the sensor and buffer it into the structure basicInfo that stores information
    * @note basicInfo structure members:
    * @n      PID: module PID
    * @n      VID: module VID
@@ -158,51 +158,51 @@ public:
    * @n      baudrate: module baud rate
    * @n      checkbit: check bit
    * @n      stopbit: stop bit
-   * @n      versions: firmware revision number
+   * @n      versions: firmware version number
    * @return returning 0 means read succeeds
    */
   int refreshBasicInfo(void);
 
   /**
    * @fn refreshMeasurementData
-   * @brief re-read the measured data from the sensor and buffer it into the array dataBuf[11] that stores information
+   * @brief Re-read the measured data from the sensor and buffer it into the array dataBuf[11] that stores information
    * @note dataBuf[11] array members:
    * @n      dataBuf[0]: the number of objects currently detected
-   * @n      dataBuf[1]: measured distance of the first object; dataBuf[2]: measured intensity of the first object
-   * @n      dataBuf[3]: measured distance of the second object; dataBuf[4]: measured intensity of the second object
-   * @n      dataBuf[5]: measured distance of the third object; dataBuf[6]: measured intensity of the third object
-   * @n      dataBuf[7]: measured distance of the fourth object; dataBuf[8]: measured intensity of the fourth object
-   * @n      dataBuf[9]: measured distance of the fifth object; dataBuf[10]: measured intensity of the fifth object
+   * @n      dataBuf[1]: measured distance to the first object; dataBuf[2]: measured intensity of the first object
+   * @n      dataBuf[3]: measured distance to the second object; dataBuf[4]: measured intensity of the second object
+   * @n      dataBuf[5]: measured distance to the third object; dataBuf[6]: measured intensity of the third object
+   * @n      dataBuf[7]: measured distance to the fourth object; dataBuf[8]: measured intensity of the fourth object
+   * @n      dataBuf[9]: measured distance to the fifth object; dataBuf[10]: measured intensity of the fifth object
    * @return returning 0 means read succeeds
    */
   int refreshMeasurementData(void);
 
   /**
    * @fn refreshMeasurementConfig
-   * @brief retrieve the currently configured parameters from the sensor and buffer it into the structure measurementConfig that stores information
+   * @brief Retrieve the currently configured parameters from the sensor and buffer it into the structure measurementConfig that stores information
    * @note measurementConfig structure members:
-   * @n      startPosition: current set value at measurement start position
-   * @n      stopPosition: current set value at measurement stop position
+   * @n      startPosition: current measurement start position set value
+   * @n      stopPosition: current measurement stop position set value
    * @n      initialThreshold: current initial threshold set value
    * @n      endThreshold: current end threshold set value
    * @n      moduleSensitivity: current module sensitivity set value
    * @n      comparisonOffset: current comparison offset set value
-   * @return returning 0 means read succeeds
+   * @return returning 0 means reading succeeds
    */
   int refreshMeasurementConfig(void);
 
   /**
    * @fn setADDR
-   * @brief set the module communication address
-   * @param addr the device address to be set, (1~247 is 0x0001~0x00F7)
+   * @brief Set the module communication address
+   * @param addr Device address to be set, (1~247 is 0x0001~0x00F7)
    * @return None
    */
   void setADDR(uint16_t addr);
 
   /**
    * @fn setBaudrateMode
-   * @brief set the module baud rate, the setting takes effect after power fail and restart
-   * @param mode the baud rate to be set:
+   * @brief Set the module baud rate, the setting takes effect after power fail and restart
+   * @param mode The baud rate to be set:
    * @n       eBaudrate2400---2400, eBaudrate4800---4800, eBaudrate9600---9600, 
    * @n       eBaudrate14400---14400, eBaudrate19200---19200, eBaudrate38400---38400, 
    * @n       eBaudrate57600---57600, eBaudrate115200---115200, eBaudrate_1000000---1000000
@@ -213,7 +213,7 @@ public:
   /**
    * @fn setCheckbitStopbit
    * @brief set check bit and stop bit of the module
-   * @param mode the mode to be set, the following patterns constitute mode:
+   * @param mode the mode to be set, perform OR operation on the following to get mode:
    * @n       check bit:
    * @n             eCheckBitNone
    * @n             eCheckBitEven
@@ -230,12 +230,12 @@ public:
    * @brief configure the value at measurement start position, configure the value at measurement stop position,
    * @n     configure the initial threshold, configure the end threshold,
    * @n     configure the module sensitivity, configure the comparison offset
-   * @param startingPosition value at start position,70~6600(0x0046~0x19C8)
-   * @param stopPosition value at stop position,70~6600(0x0046~0x19C8)
-   * @param initialThreshold initial threshold,100~10000(0x0064~0x2710)
-   * @param endThreshold end threshold,100~10000(0x0064~0x2710)
-   * @param moduleSensitivity module sensitivity,0x0000~0x0004
-   * @param comparisonOffset comparison offset,-32768~32767(0~0xFFFF)
+   * @param startingPosition value at start position, 70~6600(0x0046~0x19C8)
+   * @param stopPosition value at stop position, 70~6600(0x0046~0x19C8)
+   * @param initialThreshold initial threshold, 100~10000(0x0064~0x2710)
+   * @param endThreshold end threshold, 100~10000(0x0064~0x2710)
+   * @param moduleSensitivity module sensitivity, 0x0000~0x0004
+   * @param comparisonOffset comparison offset, -32768~32767(0~0xFFFF)
    * @return None
    */
   void setAllMeasurementParameters(uint16_t startingPosition, uint16_t stopPosition,
@@ -244,7 +244,7 @@ public:
 
   /**
    * @fn restoreFactorySetting
-   * @brief restore factory setting
+   * @brief Restore to factory setting
    * @return None
    */
   void restoreFactorySetting(void);
@@ -254,10 +254,10 @@ protected:
 /***************** register reading and writing interface ******************************/
   /**
    * @fn readData
-   * @brief register function for keep reading (read one or more register data)
-   * @param reg  register address 16bits
-   * @param pBuf to read data storage and buffer
-   * @param size to read data length
+   * @brief Read holding register function(read one or more register data)
+   * @param reg  Register address 16bits
+   * @param pBuf Read data storage and buffer
+   * @param size Read data length
    * @return uint8_t, Exception code:
    * @retval   0 : sucess.
    * @retval   1 or eRTU_EXCEPTION_ILLEGAL_FUNCTION : Illegal function.
@@ -273,10 +273,10 @@ protected:
 
   /**
    * @fn writeData
-   * @brief register function for keep writing (write one or more register data)
-   * @param reg  register address 16bits
-   * @param pBuf to write data storage and buffer
-   * @param size to write data length
+   * @brief Write holding register function(write one or more register data)
+   * @param reg  Register address 16bits
+   * @param pBuf Write data storage and buffer
+   * @param size Write data length
    * @return uint8_t, Exception code:
    * @retval   0 : sucess.
    * @retval   1 or eRTU_EXCEPTION_ILLEGAL_FUNCTION : Illegal function.
@@ -284,14 +284,14 @@ protected:
    * @retval   3 or eRTU_EXCEPTION_ILLEGAL_DATA_VALUE:  Illegal data value.
    * @retval   4 or eRTU_EXCEPTION_SLAVE_FAILURE:  Slave failure.
    * @retval   8 or eRTU_EXCEPTION_CRC_ERROR:  CRC check error.
-   * @retval   9 or eRTU_RECV_ERROR:  Receive packet error.
+   * @retval   9 or eRTU_RECV_ERROR: Receive packet error.
    * @retval   10 or eRTU_MEMORY_ERROR: Memory error.
    * @retval   11 or eRTU_ID_ERROR: Broadcasr address or error ID
    */
   virtual uint8_t writeData(uint16_t reg, const void * pBuf, uint8_t size);
 
 public:
-  /* the variable for storing the information obtained by users */
+  /* variable for storing the information obtained by users */
   uint16_t dataBuf[11];   // the array storing the measured data
   sBasicInfo_t basicInfo;   // the array storing the sensor basic information
   sMeasurementConfig_t measurementConfig;   // the array storing the sensor measurement parameters

@@ -2,7 +2,7 @@
 '''!
   @file  DFRobot_RS01.py
   @brief  Define the infrastructure of DFRobot_RS01 class
-  @details  get and configure the sensor basic information and measurement parameters, and get the sensor measurement information
+  @details  Get and configure the sensor basic information and measurement parameters, and the sensor measurement information
   @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
   @license  The MIT License (MIT)
   @author  [qsjhyy](yihuan.huang@dfrobot.com)
@@ -30,13 +30,13 @@ formatter = logging.Formatter("%(asctime)s - [%(filename)s %(funcName)s]:%(linen
 ph.setFormatter(formatter) 
 logger.addHandler(ph)
 
-## module PID (the highest two values are used as class to judge 00:SEN、01:DFR、10:TEL, the next 14 numbers as num)(SEN0489)
+## module PID (The highest two of 16-bit data are used to determine SKU type: 00: SEN, 01: DFR, 10: TEL, the next 14 are numbers.)(SEN0489)
 RS01_PID                  = 0x01E9
 
 # RS01 register address for basic information
-## module PID memory register, the default value is 0x01E9 (the highest two values are used as class to judge 00:SEN、01:DFR、10:TEL, the next 14 numbers as num)(SEN0489)
+## module PID memory register, the default value is 0x01E9 (The highest two bits are used to judge SKU type: 00:SEN, 01:DFR, 10:TEL, The next 14 bits are used as num)(SEN0489)
 RS01_PID_REG              = 0x0000
-## module VID memory register, the default value is 0x3343 (representative manufacturer is DFRobot)
+## module VID memory register, the default value is 0x3343 (represent manufacturer DFRobot)
 RS01_VID_REG              = 0x0001
 ## memory register of module communication address, the default value is 0x000E, module device address(1~247)
 RS01_ADDR_REG             = 0x0002
@@ -50,39 +50,39 @@ RS01_VERSION_REG          = 0x0005
 # RS01 register address of measurement data
 ## detect the current object numbers
 RS01_TARGETS_NUMBER       = 0x0006
-## distance of object 1
+## distance to object 1
 RS01_DISTANCE_TARGET1     = 0x0007
 ## intensity of object 1
 RS01_INTENSITY_TARGET1    = 0x0008
-## distance of object 2
+## distance to object 2
 RS01_DISTANCE_TARGET2     = 0x0009
 ## intensity of object 2
 RS01_INTENSITY_TARGET2    = 0x000A
-## distance of object 3
+## distance to object 3
 RS01_DISTANCE_TARGET3     = 0x000B
 ## intensity of object 3
 RS01_INTENSITY_TARGET3    = 0x000C
-## distance of object 4
+## distance to object 4
 RS01_DISTANCE_TARGET4     = 0x000D
 ## intensity of object 4
 RS01_INTENSITY_TARGET4    = 0x000E
-## distance of object 5
+## distance to object 5
 RS01_DISTANCE_TARGET5     = 0x000F
 ## intensity of object 5
 RS01_INTENSITY_TARGET5    = 0x0010
 
 # RS01 configure register address
-## configure register at measurement start position, the default value is 0x00C8
+## measurement start position config register, the default value is 0x00C8
 MEASUREMENT_START_POSITION   = 0x0011
-## configure register at measurement stop position, the default value is 0x1770
+## measurement stop position config register, the default value is 0x1770
 MEASUREMENT_END_POSITION       = 0x0012
-## configure register for the initial threshold, the default value is 0x0190
+## initial threshold config register, the default value is 0x0190
 RS01_START_THRESHOLD          = 0x0013
-## configure register for the end threshold, the default value is 0x0190
+## end threshold config register, the default value is 0x0190
 RS01_END_THRESHOLD              = 0x0014
-## configure register for the module sensitivity, the default value is 0x0002
+## module sensitivity config register, the default value is 0x0002
 RS01_MODULE_SENSITIVITY         = 0x0015
-## configure register for the comparison offset, the default value is 0x0000
+## comparison offset config register, the default value is 0x0000
 RS01_COMPARISON_OFFSET          = 0x0016
 ## restore factory setting
 RS01_RESET_FACTORY             = 0x0017
@@ -90,7 +90,7 @@ RS01_RESET_FACTORY             = 0x0017
 
 class DFRobot_RS01(object):
     '''!
-      @brief define DFRobot_RS01 class
+      @brief Define DFRobot_RS01 class
       @details to drive RS01 radar
     '''
 
@@ -129,7 +129,7 @@ class DFRobot_RS01(object):
           @param addr modbus communication address
           @param port modbus communication serial port
           @param baud modbus communication baud rate
-          @param bytesize modbus communication data bits
+          @param bytesize modbus communication byte size
           @param parity modbus communication check bit
           @param stopbit modbus communication stop bit
           @param xonxoff modbus communication synchronous and asynchronous setting
@@ -151,7 +151,7 @@ class DFRobot_RS01(object):
 
     def begin(self):
         '''!
-          @brief Initialize sensor
+          @brief Init sensor
           @return  return initialization status
           @retval True indicate initialization succeed
           @retval False indicate initialization failed
@@ -168,27 +168,27 @@ class DFRobot_RS01(object):
 
     def read_basic_info(self):
         '''!
-          @brief read the device basic information
+          @brief Read the device basic information
           @return list: 
           @retval  the first element: module PID
           @retval  the second element: module VID
           @retval  the third element: the module communication address
           @retval  the fourth element: the module baud rate
           @retval  the fifth element: the module check bit and stop bit
-          @retval  the sixth element: firmware revision number
+          @retval  the sixth element: firmware version number
         '''
         return self._read_reg(RS01_PID_REG, 6)
 
     def read_measurement_data(self):
         '''!
-          @brief read the module measured data
+          @brief Read the measured data from the module
           @return list: 
           @retval  the first element: the number of objects currently detected
-          @retval  the second element: measured distance of the first object；the third element: measured intensity of the first object
-          @retval  the fourth element: measured distance of the second object；the fifth element: measured intensity of the second object
-          @retval  the sixth element: measured distance of the third object；the seventh element: measured intensity of the third object
-          @retval  the eighth element: measured distance of the fourth object；the ninth element: measured intensity of the fourth object
-          @retval  the tenth element: measured distance of the fifth object；the eleventh element: measured intensity of the fifth object
+          @retval  the second element: measured distance to the first object; the third element: measured intensity of the first object
+          @retval  the fourth element: measured distance to the second object; the fifth element: measured intensity of the second object
+          @retval  the sixth element: measured distance to the third object; the seventh element: measured intensity of the third object
+          @retval  the eighth element: measured distance to the fourth object; the ninth element: measured intensity of the fourth object
+          @retval  the tenth element: measured distance to the fifth object; the eleventh element: measured intensity of the fifth object
         '''
         return self._read_reg(RS01_TARGETS_NUMBER, 11)
 
@@ -196,8 +196,8 @@ class DFRobot_RS01(object):
         '''!
           @brief read the module measurement parameters currently configured
           @return list: 
-          @retval  the first element: current set value at measurement start position 
-          @retval  the second element: current set value at measurement stop position
+          @retval  the first element: current measurement start position set value 
+          @retval  the second element: current measurement stop position set value
           @retval  the third element: current initial threshold set value
           @retval  the fourth element: current end threshold set value
           @retval  the fifth element: current module sensitivity set value
@@ -207,8 +207,8 @@ class DFRobot_RS01(object):
 
     def set_ADDR(self, addr):
         '''!
-          @brief set the module communication address
-          @param addr the device address to be set, (1~247 is 0x0001~0x00F7)
+          @brief Set the module communication address
+          @param addr Device address to be set, (1~247 is 0x0001~0x00F7)
         '''
         if 0x0001 < addr < 0x00F7:
             if 0 != len(self._write_reg(RS01_ADDR_REG, [addr])):
@@ -218,8 +218,8 @@ class DFRobot_RS01(object):
 
     def set_baudrate_mode(self, mode):
         '''!
-          @brief set the module baud rate, power off to save the settings, and restart for the settings to take effect
-          @param mode the baud rate to be set:
+          @brief Set the module baud rate, power off to save the settings, and restart for the settings to take effect
+          @param mode The baud rate to be set:
           @n     E_BAUDRATE_2400---2400, E_BAUDRATE_4800---4800, E_BAUDRATE_9600---9600, 
           @n     E_BAUDRATE_14400---14400, E_BAUDRATE_19200---19200, E_BAUDRATE_38400---38400, 
           @n     E_BAUDRATE_57600---57600, E_BAUDRATE_115200---115200
@@ -231,8 +231,8 @@ class DFRobot_RS01(object):
 
     def set_checkbit_stopbit(self, mode):
         '''!
-          @brief set check bit and stop bit of the module
-          @param mode the mode to be set, the following patterns constitute mode:
+          @brief Set check bit and stop bit of the module
+          @param mode The mode to be set, perform OR operation on the following to get mode:
           @n     check bit:
           @n          E_CHECKBIT_NONE
           @n          E_CHECKBIT_EVEN
@@ -251,12 +251,12 @@ class DFRobot_RS01(object):
           @brief configure the value at measurement start position, configure the value at measurement stop position, 
           @n     configure the initial threshold, configure the end threshold, 
           @n     configure the module sensitivity, configure the comparison offset
-          @param starting_position value at start position,0x0046~0x19C8
-          @param stop_position value at stop position,0x0046~0x19C8
-          @param initial_threshold initial threshold,0x0064~0x2710
-          @param end_threshold end threshold,0x0064~0x2710
-          @param module_sensitivity module sensitivity,0x0000~0x0004
-          @param comparison_offset comparison offset,0x0000~0xFFFF
+          @param starting_position value at start position, 0x0046~0x19C8
+          @param stop_position value at stop position, 0x0046~0x19C8
+          @param initial_threshold initial threshold, 0x0064~0x2710
+          @param end_threshold end threshold, 0x0064~0x2710
+          @param module_sensitivity module sensitivity, 0x0000~0x0004
+          @param comparison_offset comparison offset, 0x0000~0xFFFF
         '''
         self.reg_value_buf = self._read_reg(MEASUREMENT_START_POSITION, 6)
         if 0 == len(self.reg_value_buf):
@@ -281,7 +281,7 @@ class DFRobot_RS01(object):
 
     def restore_factory_setting(self):
         '''!
-          @brief restore factory setting
+          @brief Restore to factory setting
         '''
         if 0 != self._write_reg(RS01_RESET_FACTORY, 0x0000):
             logger.info("restore factory setting failed!")

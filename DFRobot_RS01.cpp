@@ -13,12 +13,12 @@
 DFRobot_RS01::DFRobot_RS01(uint8_t addr)
 {
   basicInfo.modbusAddr = addr;   // RS01modbus communication address
-  measurementConfig.startPosition = 0x00C8;   // the default measurement start position 200
-  measurementConfig.stopPosition = 0x1770;   // the default measurement stop position 6000
-  measurementConfig.initialThreshold = 0x0190;   // the default initial threshold 400
-  measurementConfig.endThreshold = 0x0190;   // the default end threshold 400
-  measurementConfig.moduleSensitivity = 0x0002;   // the default measurement sensitivity 2
-  measurementConfig.comparisonOffset = 0x0000;   // the default comparison offset 0
+  measurementConfig.startPosition = 0x00C8;   // Default measurement start position 200
+  measurementConfig.stopPosition = 0x1770;   // Default measurement stop position 6000
+  measurementConfig.initialThreshold = 0x0190;   // Default initial threshold 400
+  measurementConfig.endThreshold = 0x0190;   // Default end threshold 400
+  measurementConfig.moduleSensitivity = 0x0002;   // Default measurement sensitivity 2
+  measurementConfig.comparisonOffset = 0x0000;   // Default comparison offset 0
 }
 
 int DFRobot_RS01::begin(Stream *_serial)
@@ -27,10 +27,10 @@ int DFRobot_RS01::begin(Stream *_serial)
    DBG("Invaild Device addr.");
   }
 
-  _DFRobot_RTU = new DFRobot_RTU(_serial);   // instantiate a modbus-RTU object for register reading and writing communication
+  _DFRobot_RTU = new DFRobot_RTU(_serial);   // Instantiate a modbus-RTU object for register reading and writing communication
   delay(1000);   // wait for 1s
 
-  _DFRobot_RTU->setTimeoutTimeMs(500);   // set the return message timeout to 500ms
+  _DFRobot_RTU->setTimeoutTimeMs(500);   // Set the return message timeout to 500ms
   delay(100);
 
   uint16_t pid=0;
@@ -50,7 +50,7 @@ int DFRobot_RS01::begin(Stream *_serial)
   return NO_ERROR;
 }
 
-/***************** the sensor information read ******************************/
+/***************** Sensor information reading ******************************/
 
 int DFRobot_RS01::refreshBasicInfo(void)
 {
@@ -67,7 +67,7 @@ int DFRobot_RS01::refreshMeasurementConfig(void)
   return readData(MEASUREMENT_START_POSITION, (uint16_t *)&measurementConfig, 6);
 }
 
-/***************** the sensor basic information configuration ******************************/
+/***************** Sensor basic information config ******************************/
 
 void DFRobot_RS01::setADDR(uint16_t addr)
 {
@@ -107,7 +107,7 @@ void DFRobot_RS01::setCheckbitStopbit(uint16_t mode)
   delay(100);
 }
 
-/***************** the sensor measurement parameters configuration ******************************/
+/***************** Sensor measurement parameters config ******************************/
 
 void DFRobot_RS01::setAllMeasurementParameters(uint16_t startingPosition, uint16_t stopPosition,
                                                   uint16_t initialThreshold, uint16_t endThreshold,
@@ -120,32 +120,32 @@ void DFRobot_RS01::setAllMeasurementParameters(uint16_t startingPosition, uint16
 
   if((0x0046 <= startingPosition) && (measurementConfig.stopPosition >= startingPosition))
   {
-    measurementConfig.startPosition = startingPosition;   // the set value at measurement start position
+    measurementConfig.startPosition = startingPosition;   // Measurement start position set value
   }
 
   if((measurementConfig.startPosition <= stopPosition) && (0x19C8 >= stopPosition))
   {
-    measurementConfig.stopPosition = stopPosition;   // the set value at measurement stop position
+    measurementConfig.stopPosition = stopPosition;   // Measurement stop position set value
   }
 
   if((0x0064 <= initialThreshold) && (0x2710 >= initialThreshold) && (0 < int16_t(initialThreshold + measurementConfig.comparisonOffset)))
   {
-    measurementConfig.initialThreshold = initialThreshold;   // initial threshold set value
+    measurementConfig.initialThreshold = initialThreshold;   // Initial threshold set value
   }
 
   if((0x0064 <= endThreshold) && (0x2710 >= endThreshold) && (0 < int16_t(endThreshold + measurementConfig.comparisonOffset)))
   {
-    measurementConfig.endThreshold = endThreshold;   // end threshold set value
+    measurementConfig.endThreshold = endThreshold;   // End threshold set value
   }
 
   if(0x0004 >= moduleSensitivity)
   {
-    measurementConfig.moduleSensitivity = moduleSensitivity;   // module sensitivity set value
+    measurementConfig.moduleSensitivity = moduleSensitivity;   // Module sensitivity set value
   }
 
   if((0 < int16_t(measurementConfig.initialThreshold + comparisonOffset)) && (0 < int16_t(comparisonOffset + measurementConfig.endThreshold)))
   {
-    measurementConfig.comparisonOffset = comparisonOffset;   // comparison offset set value
+    measurementConfig.comparisonOffset = comparisonOffset;   // Comparison offset set value
   }
 
   if(writeData(MEASUREMENT_START_POSITION, &measurementConfig, 6)){
@@ -156,13 +156,13 @@ void DFRobot_RS01::setAllMeasurementParameters(uint16_t startingPosition, uint16
 
 void DFRobot_RS01::restoreFactorySetting(void)
 {
-  uint16_t value = 0x0000;   // to zero out the register is a soft reset
+  uint16_t value = 0x0000;   // To zero out the register is a soft reset
   if(writeData(RS01_RESET_FACTORY, &value, 1)){
     DBG();
   }
 }
 
-/************ Initialization of modbus-RTU interfaces reading and writing ***********/
+/************ Modbus-RTU interface init and read/write ***********/
 
 uint8_t DFRobot_RS01::readData(uint16_t reg, uint16_t * pBuf, uint8_t size)
 {

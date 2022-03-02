@@ -28,7 +28,7 @@ The unique characteristics of the RS01 radar sensor make it possible to identify
 ## Summary
 
 The library uses the RTU communication protocol and relies on the DFRobot_RTU library. If you want to install and run the library you have to install its dependent libraries.
-The library, with radar RS01, can get the basic information, measure parameters and measure data of the radar module, and can also change the basic information and measure parameters.
+The library supports radar RS01 and allows users to get the basic information, measure parameters and measure data of the radar module, and also change the basic information and measure parameters.
 
 
 ## Installation
@@ -43,8 +43,8 @@ paste it into the \Arduino\libraries directory, then open the examples folder an
 
   /**
    * @fn begin
-   * @brief initialization function
-   * @param _serial serial ports for communication, supporting hard and soft serial ports
+   * @brief Init function
+   * @param _serial Serial ports for communication, supporting hard and soft serial ports
    * @return int type, means returning initialization status
    * @retval 0 NO_ERROR
    * @retval -1 ERR_DATA_BUS
@@ -54,7 +54,7 @@ paste it into the \Arduino\libraries directory, then open the examples folder an
 
   /**
    * @fn refreshBasicInfo
-   * @brief retrieve the basic information from the sensor and buffer it into basicInfo, the structure that stores information
+   * @brief Retrieve the basic information from the sensor and buffer it into basicInfo, the structure that stores information
    * @note basicInfo structure members:
    * @n      PID: module PID
    * @n      VID: module VID
@@ -63,50 +63,50 @@ paste it into the \Arduino\libraries directory, then open the examples folder an
    * @n      checkbit: check bit
    * @n      stopbit: stop bit
    * @n      versions: firmware revision number
-   * @return returning 0 means read succeeds
+   * @return returning 0 means reading succeeds
    */
   int refreshBasicInfo(void);
 
   /**
    * @fn refreshMeasurementData
-   * @brief re-read the measured data from the sensor and buffer it into the array dataBuf[11] that stores information
+   * @brief Re-read the measured data from the sensor and buffer it into the array dataBuf[11] that stores information
    * @note dataBuf[11] array members:
    * @n      dataBuf[0]: the number of objects currently detected
-   * @n      dataBuf[1]: measured distance of the first object; dataBuf[2]: measured intensity of the first object
-   * @n      dataBuf[3]: measured distance of the second object; dataBuf[4]: measured intensity of the second object
-   * @n      dataBuf[5]: measured distance of the third object; dataBuf[6]: measured intensity of the third object
-   * @n      dataBuf[7]: measured distance of the fourth object; dataBuf[8]: measured intensity of the fourth object
-   * @n      dataBuf[9]: measured distance of the fifth object; dataBuf[10]: measured intensity of the fifth object
+   * @n      dataBuf[1]: measured distance to the first object; dataBuf[2]: measured intensity of the first object
+   * @n      dataBuf[3]: measured distance to the second object; dataBuf[4]: measured intensity of the second object
+   * @n      dataBuf[5]: measured distance to the third object; dataBuf[6]: measured intensity of the third object
+   * @n      dataBuf[7]: measured distance to the fourth object; dataBuf[8]: measured intensity of the fourth object
+   * @n      dataBuf[9]: measured distance to the fifth object; dataBuf[10]: measured intensity of the fifth object
    * @return returning 0 means read succeeds
    */
   int refreshMeasurementData(void);
 
   /**
    * @fn refreshMeasurementConfig
-   * @brief retrieve the currently configured parameters from the sensor and buffer it into the structure measurementConfig that stores information
+   * @brief Retrieve the currently configured parameters from the sensor and buffer it into the structure measurementConfig that stores information
    * @note measurementConfig structure members:
-   * @n      startPosition: current set value at measurement start position
-   * @n      stopPosition: current set value at measurement stop position
+   * @n      startPosition: current measurement start position set value
+   * @n      stopPosition: current measurement stop position set value
    * @n      initialThreshold: current initial threshold set value
    * @n      endThreshold: current end threshold set value
    * @n      moduleSensitivity: current module sensitivity set value
    * @n      comparisonOffset: current comparison offset set value
-   * @return returning 0 means read succeeds
+   * @return returning 0 means reading succeeds
    */
   int refreshMeasurementConfig(void);
 
   /**
    * @fn setADDR
-   * @brief set the module communication address
-   * @param addr the device address to be set, (1~247即0x0001~0x00F7)
+   * @brief Set the module communication address
+   * @param addr Device address to be set, (1~247 for 0x0001~0x00F7)
    * @return None
    */
   void setADDR(uint16_t addr);
 
   /**
    * @fn setBaudrateMode
-   * @brief set the module baud rate, the setting takes effect after power fail and restart
-   * @param mode the baud rate to be set:
+   * @brief Set the module baud rate, the setting takes effect after power fail and restart
+   * @param mode The baud rate to be set:
    * @n     eBaudrate2400---2400, eBaudrate4800---4800, eBaudrate9600---9600, 
    * @n     eBaudrate14400---14400, eBaudrate19200---19200, eBaudrate38400---38400, 
    * @n     eBaudrate57600---57600, eBaudrate115200---115200, eBaudrate_1000000---1000000
@@ -115,8 +115,8 @@ paste it into the \Arduino\libraries directory, then open the examples folder an
 
   /**
    * @fn setCheckbitStopbit
-   * @brief set check bit and stop bit of the module
-   * @param mode the mode to be set, the following patterns constitute mode::
+   * @brief Set check bit and stop bit of the module
+   * @param mode The mode to be set, perform OR operation on the following to get mode::
    * @n     check bit:
    * @n           eCheckBitNone
    * @n           eCheckBitEven
@@ -132,12 +132,12 @@ paste it into the \Arduino\libraries directory, then open the examples folder an
    * @brief configure the value at measurement start position, configure the value at measurement stop position,
    * @n     configure the initial threshold, configure the end threshold,
    * @n     configure the module sensitivity, configure the comparison offset
-   * @param startingPosition start position value,70~6600(0x0046~0x19C8)
-   * @param stopPosition stop position value,70~6600(0x0046~0x19C8)
-   * @param initialThreshold initial threshold,100~10000(0x0064~0x2710)
-   * @param endThreshold end threshold,100~10000(0x0064~0x2710)
-   * @param moduleSensitivity module sensitivity,0x0000~0x0004
-   * @param comparisonOffset comparison offset,-32768~32767(0~0xFFFF)
+   * @param startingPosition start position value, 70~6600(0x0046~0x19C8)
+   * @param stopPosition stop position value, 70~6600(0x0046~0x19C8)
+   * @param initialThreshold initial threshold, 100~10000(0x0064~0x2710)
+   * @param endThreshold end threshold, 100~10000(0x0064~0x2710)
+   * @param moduleSensitivity module sensitivity, 0x0000~0x0004
+   * @param comparisonOffset comparison offset, -32768~32767(0~0xFFFF)
    */
   void setAllMeasurementParameters(uint16_t startingPosition, uint16_t stopPosition,
                                    uint16_t initialThreshold, uint16_t endThreshold,
@@ -145,7 +145,7 @@ paste it into the \Arduino\libraries directory, then open the examples folder an
 
   /**
    * @fn restoreFactorySetting
-   * @brief restore factory setting
+   * @brief Restore to factory setting
    */
   void restoreFactorySetting(void);
 
@@ -158,14 +158,14 @@ paste it into the \Arduino\libraries directory, then open the examples folder an
 
 MCU                | SoftwareSerial | HardwareSerial |
 ------------------ | :------------: | :------------: |
-Arduino Uno        |       √        |       X        |
+Arduino Uno        |       √        |                |
 Mega2560           |       √        |       √        |
 Leonardo           |       √        |       √        |
-ESP32              |       X        |       √        |
-ESP8266            |       √        |       X        |
-micro:bit          |       X        |       X        |
-FireBeetle M0      |       X        |       √        |
-raspberry          |       X        |       √        |
+ESP32              |                |       √        |
+ESP8266            |       √        |                |
+micro:bit          |                |                |
+FireBeetle M0      |                |       √        |
+raspberry          |                |       √        |
 
 * DFRobot_RS01
 
@@ -187,5 +187,5 @@ FireBeetle-M0      |      √       |              |             |
 
 ## Credits
 
-Written by qsjhyy(yihuan.huang@dfrobot.com), 2021. (Welcome to our [website](https://www.dfrobot.com/))
+Written by qsjhyy(yihuan.huang@dfrobot.com), 2022. (Welcome to our [website](https://www.dfrobot.com/))
 
