@@ -6,20 +6,20 @@
  * @author   [qsjhyy](yihuan.huang@dfrobot.com)
  * @version  V1.0
  * @date  2021-07-06
- * @url   https://github.com/DFRobot/DFRobot_A111
+ * @url   https://github.com/DFRobot/DFRobot_RS01
  */
-#include <DFRobot_A111.h>
+#include <DFRobot_RS01.h>
 #if defined(ARDUINO_AVR_UNO)||defined(ESP8266)
 #include <SoftwareSerial.h>
 #endif
 
 #define DEFAULT_DEVICE_ADDRESS 0x000E
 /**
- * @brief DFRobot_A111_RS485 constructor
+ * @brief DFRobot_RS01 constructor
  * @param addr: modbus slave address(range1~247)or broadcast address(0x00)
  * @n     if it's configured a broadcast address, send a broadcast packet, and all slaves on bus will process it but not respond
  */
-DFRobot_A111 sensor(/*addr =*/DEFAULT_DEVICE_ADDRESS);
+DFRobot_RS01 sensor(/*addr =*/DEFAULT_DEVICE_ADDRESS);
 
 #if defined(ARDUINO_AVR_UNO)||defined(ESP8266)
   SoftwareSerial mySerial(/*rx =*/4, /*tx =*/5);

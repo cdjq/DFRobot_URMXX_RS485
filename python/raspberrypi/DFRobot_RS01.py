@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*
 '''!
-  @file  DFRobot_A111.py
-  @brief  Define the infrastructure of DFRobot_A111 class
+  @file  DFRobot_RS01.py
+  @brief  Define the infrastructure of DFRobot_RS01 class
   @details  get and configure the sensor basic information and measurement parameters, and get the sensor measurement information
   @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
   @license  The MIT License (MIT)
   @author  [qsjhyy](yihuan.huang@dfrobot.com)
   @version  V1.0
   @date  2021-07-23
-  @url  https://github.com/DFRobot/DFRobot_A111
+  @url  https://github.com/DFRobot/DFRobot_RS01
 '''
 import sys
 import time
@@ -31,67 +31,67 @@ ph.setFormatter(formatter)
 logger.addHandler(ph)
 
 ## module PID (the highest two values are used as class to judge 00:SEN、01:DFR、10:TEL, the next 14 numbers as num)(SEN0489)
-A111_PID                  = 0x01E9
+RS01_PID                  = 0x01E9
 
-# A111 register address for basic information
+# RS01 register address for basic information
 ## module PID memory register, the default value is 0x01E9 (the highest two values are used as class to judge 00:SEN、01:DFR、10:TEL, the next 14 numbers as num)(SEN0489)
-A111_PID_REG              = 0x0000
+RS01_PID_REG              = 0x0000
 ## module VID memory register, the default value is 0x3343 (representative manufacturer is DFRobot)
-A111_VID_REG              = 0x0001
+RS01_VID_REG              = 0x0001
 ## memory register of module communication address, the default value is 0x000E, module device address(1~247)
-A111_ADDR_REG             = 0x0002
+RS01_ADDR_REG             = 0x0002
 ## module baud rate memory register, the default value is 0x0008
-A111_BAUDRATE_REG         = 0x0003
+RS01_BAUDRATE_REG         = 0x0003
 ## module check bit and stop bit memory register, the default value is 0x0001
-A111_CHECKBIT_STOPBIT_REG = 0x0004
+RS01_CHECKBIT_STOPBIT_REG = 0x0004
 ## memory register of firmware revision number:0x1000 represents V1.0.0.0
-A111_VERSION_REG          = 0x0005
+RS01_VERSION_REG          = 0x0005
 
-# A111 register address of measurement data
+# RS01 register address of measurement data
 ## detect the current object numbers
-A111_TARGETS_NUMBER       = 0x0006
+RS01_TARGETS_NUMBER       = 0x0006
 ## distance of object 1
-A111_DISTANCE_TARGET1     = 0x0007
+RS01_DISTANCE_TARGET1     = 0x0007
 ## intensity of object 1
-A111_INTENSITY_TARGET1    = 0x0008
+RS01_INTENSITY_TARGET1    = 0x0008
 ## distance of object 2
-A111_DISTANCE_TARGET2     = 0x0009
+RS01_DISTANCE_TARGET2     = 0x0009
 ## intensity of object 2
-A111_INTENSITY_TARGET2    = 0x000A
+RS01_INTENSITY_TARGET2    = 0x000A
 ## distance of object 3
-A111_DISTANCE_TARGET3     = 0x000B
+RS01_DISTANCE_TARGET3     = 0x000B
 ## intensity of object 3
-A111_INTENSITY_TARGET3    = 0x000C
+RS01_INTENSITY_TARGET3    = 0x000C
 ## distance of object 4
-A111_DISTANCE_TARGET4     = 0x000D
+RS01_DISTANCE_TARGET4     = 0x000D
 ## intensity of object 4
-A111_INTENSITY_TARGET4    = 0x000E
+RS01_INTENSITY_TARGET4    = 0x000E
 ## distance of object 5
-A111_DISTANCE_TARGET5     = 0x000F
+RS01_DISTANCE_TARGET5     = 0x000F
 ## intensity of object 5
-A111_INTENSITY_TARGET5    = 0x0010
+RS01_INTENSITY_TARGET5    = 0x0010
 
-# A111 configure register address
+# RS01 configure register address
 ## configure register at measurement start position, the default value is 0x00C8
 MEASUREMENT_START_POSITION   = 0x0011
 ## configure register at measurement stop position, the default value is 0x1770
 MEASUREMENT_END_POSITION       = 0x0012
 ## configure register for the initial threshold, the default value is 0x0190
-A111_START_THRESHOLD          = 0x0013
+RS01_START_THRESHOLD          = 0x0013
 ## configure register for the end threshold, the default value is 0x0190
-A111_END_THRESHOLD              = 0x0014
+RS01_END_THRESHOLD              = 0x0014
 ## configure register for the module sensitivity, the default value is 0x0002
-A111_MODULE_SENSITIVITY         = 0x0015
+RS01_MODULE_SENSITIVITY         = 0x0015
 ## configure register for the comparison offset, the default value is 0x0000
-A111_COMPARISON_OFFSET          = 0x0016
+RS01_COMPARISON_OFFSET          = 0x0016
 ## restore factory setting
-A111_RESET_FACTORY             = 0x0017
+RS01_RESET_FACTORY             = 0x0017
 
 
-class DFRobot_A111(object):
+class DFRobot_RS01(object):
     '''!
-      @brief define DFRobot_A111 class
-      @details to drive a111 radar
+      @brief define DFRobot_RS01 class
+      @details to drive RS01 radar
     '''
 
     ## baud rate 2400
@@ -134,7 +134,7 @@ class DFRobot_A111(object):
           @param stopbit modbus communication stop bit
           @param xonxoff modbus communication synchronous and asynchronous setting
         '''
-        self._a111_addr = addr
+        self._rs01_addr = addr
 
         self._DFRobot_RTU = modbus_rtu.RtuMaster(
             serial.Serial(port, baud, bytesize, parity, stopbit, xonxoff)
@@ -158,10 +158,10 @@ class DFRobot_A111(object):
         '''
         time.sleep(1)
         ret = True
-        if(self._a111_addr >0xF7) and (self._a111_addr < 1):
+        if(self._rs01_addr >0xF7) and (self._rs01_addr < 1):
             ret = False
 
-        if A111_PID != self._read_reg(A111_PID_REG, 1)[0]:
+        if RS01_PID != self._read_reg(RS01_PID_REG, 1)[0]:
             ret = False
 
         return ret
@@ -177,7 +177,7 @@ class DFRobot_A111(object):
           @retval  the fifth element: the module check bit and stop bit
           @retval  the sixth element: firmware revision number
         '''
-        return self._read_reg(A111_PID_REG, 6)
+        return self._read_reg(RS01_PID_REG, 6)
 
     def read_measurement_data(self):
         '''!
@@ -190,7 +190,7 @@ class DFRobot_A111(object):
           @retval  the eighth element: measured distance of the fourth object；the ninth element: measured intensity of the fourth object
           @retval  the tenth element: measured distance of the fifth object；the eleventh element: measured intensity of the fifth object
         '''
-        return self._read_reg(A111_TARGETS_NUMBER, 11)
+        return self._read_reg(RS01_TARGETS_NUMBER, 11)
 
     def read_measurement_config(self):
         '''!
@@ -211,8 +211,8 @@ class DFRobot_A111(object):
           @param addr the device address to be set, (1~247 is 0x0001~0x00F7)
         '''
         if 0x0001 < addr < 0x00F7:
-            if 0 != len(self._write_reg(A111_ADDR_REG, [addr])):
-                self._a111_addr = addr
+            if 0 != len(self._write_reg(RS01_ADDR_REG, [addr])):
+                self._rs01_addr = addr
             else:
                 logger.info("Set addr failed!")
 
@@ -224,7 +224,7 @@ class DFRobot_A111(object):
           @n     E_BAUDRATE_14400---14400, E_BAUDRATE_19200---19200, E_BAUDRATE_38400---38400, 
           @n     E_BAUDRATE_57600---57600, E_BAUDRATE_115200---115200
         '''
-        if 0 != len(self._write_reg(A111_BAUDRATE_REG, [mode])):
+        if 0 != len(self._write_reg(RS01_BAUDRATE_REG, [mode])):
             time.sleep(0.5)
         else:
             logger.info("Set baudrate failed!")
@@ -241,7 +241,7 @@ class DFRobot_A111(object):
           @n          E_STOPBIT_1
           @n          E_STOPBIT_2
         '''
-        if 0 == len(self._write_reg(A111_CHECKBIT_STOPBIT_REG, [mode])):
+        if 0 == len(self._write_reg(RS01_CHECKBIT_STOPBIT_REG, [mode])):
             logger.info("Set checkbit and stopbit failed!")
 
     def set_all_measurement_parameters(self, starting_position, stop_position, 
@@ -283,7 +283,7 @@ class DFRobot_A111(object):
         '''!
           @brief restore factory setting
         '''
-        if 0 != self._write_reg(A111_RESET_FACTORY, 0x0000):
+        if 0 != self._write_reg(RS01_RESET_FACTORY, 0x0000):
             logger.info("restore factory setting failed!")
 
     def _write_reg(self, reg, data):
@@ -296,7 +296,7 @@ class DFRobot_A111(object):
         # Low level register writing, not implemented in base class
         if isinstance(data, int):
             data = [data]
-        ret = self._DFRobot_RTU.execute(self._a111_addr, cst.WRITE_MULTIPLE_REGISTERS, reg, output_value=data)
+        ret = self._DFRobot_RTU.execute(self._rs01_addr, cst.WRITE_MULTIPLE_REGISTERS, reg, output_value=data)
         logger.info(ret)
         return ret
 
@@ -308,4 +308,4 @@ class DFRobot_A111(object):
           @return list: The value list of the holding register.
         '''
         # Low level register writing, not implemented in base class
-        return list(self._DFRobot_RTU.execute(self._a111_addr, cst.READ_HOLDING_REGISTERS, reg, length))
+        return list(self._DFRobot_RTU.execute(self._rs01_addr, cst.READ_HOLDING_REGISTERS, reg, length))

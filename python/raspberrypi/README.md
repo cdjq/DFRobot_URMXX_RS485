@@ -1,14 +1,14 @@
-# DFRobot_A111
+# DFRobot_RS01
 * [中文版](./README_CN.md)
 
-The millimeter wave radar ranging sensor employs A111 radar chip.
-The A111 60GHZ radar system is based on pulsed coherent radar (PCR) technology enabling millimeter accuracy with very low power consumption.
+The millimeter wave radar ranging sensor employs RS01 radar chip.
+The RS01 60GHZ radar system is based on pulsed coherent radar (PCR) technology enabling millimeter accuracy with very low power consumption.
 By operating in the 60GHz unlicensed ISM radio band, the radar sensor provides robust performance without interference from noise, dust, color nor direct or indirect light. Radio technology makes the sensor easy to integrate without the need for an aperture.
-The A111 radar sensor is optimized for ultra-low power and high precision and fully integrated into a small 29mm² chip. It is a one-package solution with integrated Antenna in Package (AiP). This will make it be a leading global product with ultra-low power radar.
-The A111 radar sensor can detect multiple objects at close range with single measurements as well as continuous sweeps set to any frequency up to 1500 Hz.
-The unique characteristics of the A111 radar sensor make it possible to identify materials and detect motion in advanced sensor applications.
+The RS01 radar sensor is optimized for ultra-low power and high precision and fully integrated into a small 29mm² chip. It is a one-package solution with integrated Antenna in Package (AiP). This will make it be a leading global product with ultra-low power radar.
+The RS01 radar sensor can detect multiple objects at close range with single measurements as well as continuous sweeps set to any frequency up to 1500 Hz.
+The unique characteristics of the RS01 radar sensor make it possible to identify materials and detect motion in advanced sensor applications.
 
-![产品实物图](../../resources/images/A111.png)
+![产品实物图](../../resources/images/RS01.png)
 
 
 ## Product Link (链接到英文商城)
@@ -28,7 +28,7 @@ The unique characteristics of the A111 radar sensor make it possible to identify
 ## Summary
 
 The library uses the RTU communication protocol and relies on the modbus_tk library. If you want to install and run the library you have to install its dependent libraries.
-The library, with radar A111, can get the basic information, measurement parameters and measured data of the radar module, and can also change the basic information and measurement parameters.
+The library, with radar RS01, can get the basic information, measurement parameters and measured data of the radar module, and can also change the basic information and measurement parameters.
 
 
 ## Installation

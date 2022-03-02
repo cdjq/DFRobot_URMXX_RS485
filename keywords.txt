@@ -1,12 +1,12 @@
 #######################################
-# Syntax Coloring Map For DFRobot_A111
+# Syntax Coloring Map For DFRobot_RS01
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-DFRobot_A111	KEYWORD1
+DFRobot_RS01	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)

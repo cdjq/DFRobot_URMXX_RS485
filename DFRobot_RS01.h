@@ -1,16 +1,16 @@
 /*!
- * @file  DFRobot_A111.h
- * @brief  Define infrastructure of DFRobot_A111 class
+ * @file  DFRobot_RS01.h
+ * @brief  Define infrastructure of DFRobot_RS01 class
  * @details  get and configure the sensor basic information and measurement parameters, and get the sensor measurement information
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license  The MIT License (MIT)
  * @author  [qsjhyy](yihuan.huang@dfrobot.com)
  * @version  V1.0
  * @date  2021-07-06
- * @url  https://github.com/DFRobot/DFRobot_A111
+ * @url  https://github.com/DFRobot/DFRobot_RS01
  */
-#ifndef __DFROBOT_A111_H__
-#define __DFROBOT_A111_H__
+#ifndef __DFROBOT_RS01_H__
+#define __DFROBOT_RS01_H__
 
 #include <Arduino.h>
 #include <Stream.h>
@@ -23,39 +23,39 @@
   #define DBG(...)
 #endif
 
-#define A111_PID                     uint16_t(0x01E9)   ///< module PID (the highest two values are used as class to judge 00:SEN、01:DFR、10:TEL, the next 14 numbers as)(SEN0489)
+#define RS01_PID                     uint16_t(0x01E9)   ///< module PID (the highest two values are used as class to judge 00:SEN、01:DFR、10:TEL, the next 14 numbers as)(SEN0489)
 
-/* A111 register address for basic information */
-#define A111_PID_REG                 uint16_t(0x0000)   ///< module PID memory register, the default value is 0x01E9 (the highest two values are used as class to judge 00:SEN、01:DFR、10:TEL, the next 14 numbers as)(SEN0489)
-#define A111_VID_REG                 uint16_t(0x0001)   ///< module VID memory register, the default value is 0x3343 (representative manufacturer is DFRobot)
-#define A111_ADDR_REG                uint16_t(0x0002)   ///< memory register for module communication address, the default value is 0x000E, module device address(1~247)
-#define A111_BAUDRATE_REG            uint16_t(0x0003)   ///< module baud rate memory register, the default value is 0x0008
-#define A111_CHECKBIT_STOPBIT_REG    uint16_t(0x0004)   ///< module check bit and stop bit memory register, the default value is 0x0001
-#define A111_VERSION_REG             uint16_t(0x0005)   ///< memory register for firmware revision number:0x1000 represents V1.0.0.0
+/* RS01 register address for basic information */
+#define RS01_PID_REG                 uint16_t(0x0000)   ///< module PID memory register, the default value is 0x01E9 (the highest two values are used as class to judge 00:SEN、01:DFR、10:TEL, the next 14 numbers as)(SEN0489)
+#define RS01_VID_REG                 uint16_t(0x0001)   ///< module VID memory register, the default value is 0x3343 (representative manufacturer is DFRobot)
+#define RS01_ADDR_REG                uint16_t(0x0002)   ///< memory register for module communication address, the default value is 0x000E, module device address(1~247)
+#define RS01_BAUDRATE_REG            uint16_t(0x0003)   ///< module baud rate memory register, the default value is 0x0008
+#define RS01_CHECKBIT_STOPBIT_REG    uint16_t(0x0004)   ///< module check bit and stop bit memory register, the default value is 0x0001
+#define RS01_VERSION_REG             uint16_t(0x0005)   ///< memory register for firmware revision number:0x1000 represents V1.0.0.0
 
-/* A111 register address of measurement data */
-#define A111_TARGETS_NUMBER        uint16_t(0x0006)   ///< detect the current object numbers
-#define A111_DISTANCE_TARGET1      uint16_t(0x0007)   ///< distance of object 1
-#define A111_INTENSITY_TARGET1     uint16_t(0x0008)   ///< intensity of object 1
-#define A111_DISTANCE_TARGET2      uint16_t(0x0009)   ///< distance of object 2
-#define A111_INTENSITY_TARGET2     uint16_t(0x000A)   ///< intensity of object 2
-#define A111_DISTANCE_TARGET3      uint16_t(0x000B)   ///< distance of object 3
-#define A111_INTENSITY_TARGET3     uint16_t(0x000C)   ///< intensity of object 3
-#define A111_DISTANCE_TARGET4      uint16_t(0x000D)   ///< distance of object 4
-#define A111_INTENSITY_TARGET4     uint16_t(0x000E)   ///< intensity of object 4
-#define A111_DISTANCE_TARGET5      uint16_t(0x000F)   ///< distance of object 5
-#define A111_INTENSITY_TARGET5     uint16_t(0x0010)   ///< intensity of object 5
+/* RS01 register address of measurement data */
+#define RS01_TARGETS_NUMBER        uint16_t(0x0006)   ///< detect the current object numbers
+#define RS01_DISTANCE_TARGET1      uint16_t(0x0007)   ///< distance of object 1
+#define RS01_INTENSITY_TARGET1     uint16_t(0x0008)   ///< intensity of object 1
+#define RS01_DISTANCE_TARGET2      uint16_t(0x0009)   ///< distance of object 2
+#define RS01_INTENSITY_TARGET2     uint16_t(0x000A)   ///< intensity of object 2
+#define RS01_DISTANCE_TARGET3      uint16_t(0x000B)   ///< distance of object 3
+#define RS01_INTENSITY_TARGET3     uint16_t(0x000C)   ///< intensity of object 3
+#define RS01_DISTANCE_TARGET4      uint16_t(0x000D)   ///< distance of object 4
+#define RS01_INTENSITY_TARGET4     uint16_t(0x000E)   ///< intensity of object 4
+#define RS01_DISTANCE_TARGET5      uint16_t(0x000F)   ///< distance of object 5
+#define RS01_INTENSITY_TARGET5     uint16_t(0x0010)   ///< intensity of object 5
 
-/* A111 configure register address */
+/* RS01 configure register address */
 #define MEASUREMENT_START_POSITION         uint16_t(0x0011)   ///< configure register at measurement start position, the default value is 0x00C8
 #define MEASUREMENT_END_POSITION           uint16_t(0x0012)   ///< configure register at measurement stop position, the default value is 0x1770
-#define A111_START_THRESHOLD               uint16_t(0x0013)   ///< configure register for the initial threshold, the default value is 0x0190
-#define A111_END_THRESHOLD                 uint16_t(0x0014)   ///< configure register for the end threshold, the default value is 0x0190
-#define A111_MODULE_SENSITIVITY            uint16_t(0x0015)   ///< configure register for the module sensitivity, the default value is 0x0002
-#define A111_COMPARISON_OFFSET             uint16_t(0x0016)   ///< configure register for the comparison offset, the default value is 0x0000
-#define A111_RESET_FACTORY                 uint16_t(0x0017)   ///< restore factory setting
+#define RS01_START_THRESHOLD               uint16_t(0x0013)   ///< configure register for the initial threshold, the default value is 0x0190
+#define RS01_END_THRESHOLD                 uint16_t(0x0014)   ///< configure register for the end threshold, the default value is 0x0190
+#define RS01_MODULE_SENSITIVITY            uint16_t(0x0015)   ///< configure register for the module sensitivity, the default value is 0x0002
+#define RS01_COMPARISON_OFFSET             uint16_t(0x0016)   ///< configure register for the comparison offset, the default value is 0x0000
+#define RS01_RESET_FACTORY                 uint16_t(0x0017)   ///< restore factory setting
 
-class DFRobot_A111
+class DFRobot_RS01
 {
 public:
   #define NO_ERROR           0     ///< No error
@@ -130,12 +130,12 @@ public:
 
 public:
   /**
-   * @fn DFRobot_A111
+   * @fn DFRobot_RS01
    * @brief constructor
    * @param addr RS485 communication device address
    * @return None
    */
-  DFRobot_A111(uint8_t addr);
+  DFRobot_RS01(uint8_t addr);
 
   /**
    * @fn begin

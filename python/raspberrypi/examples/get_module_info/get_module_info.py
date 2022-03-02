@@ -7,16 +7,16 @@
   @author  [qsjhyy](yihuan.huang@dfrobot.com)
   @version  V1.0
   @date  2021-07-23
-  @url  https://github.com/DFRobot/DFRobot_A111
+  @url  https://github.com/DFRobot/DFRobot_RS01
 '''
 from __future__ import print_function
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
 
-from DFRobot_A111 import *
+from DFRobot_RS01 import *
 
-sensor = DFRobot_A111(addr = 0x000E)
+sensor = DFRobot_RS01(addr = 0x000E)
 
 def print_measure_data(number, distance, intensity):
   print("target: %d distance: %d:" %(number, distance), end='')

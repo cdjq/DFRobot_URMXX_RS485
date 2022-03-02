@@ -1,18 +1,18 @@
 /*!
- * @file  DFRobot_A111.cpp
- * @brief  Define the infrastructure DFRobot_A111 class
+ * @file  DFRobot_RS01.cpp
+ * @brief  Define the infrastructure DFRobot_RS01 class
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license  The MIT License (MIT)
  * @author   [qsjhyy](yihuan.huang@dfrobot.com)
  * @version  V1.0
  * @date  2021-07-06
- * @url   https://github.com/DFRobot/DFRobot_A111
+ * @url   https://github.com/DFRobot/DFRobot_RS01
  */
-#include "DFRobot_A111.h"
+#include "DFRobot_RS01.h"
 
-DFRobot_A111::DFRobot_A111(uint8_t addr)
+DFRobot_RS01::DFRobot_RS01(uint8_t addr)
 {
-  basicInfo.modbusAddr = addr;   // A111modbus communication address
+  basicInfo.modbusAddr = addr;   // RS01modbus communication address
   measurementConfig.startPosition = 0x00C8;   // the default measurement start position 200
   measurementConfig.stopPosition = 0x1770;   // the default measurement stop position 6000
   measurementConfig.initialThreshold = 0x0190;   // the default initial threshold 400
@@ -21,7 +21,7 @@ DFRobot_A111::DFRobot_A111(uint8_t addr)
   measurementConfig.comparisonOffset = 0x0000;   // the default comparison offset 0
 }
 
-int DFRobot_A111::begin(Stream *_serial)
+int DFRobot_RS01::begin(Stream *_serial)
 {
   if(basicInfo.modbusAddr > 0xF7){
    DBG("Invaild Device addr.");
@@ -34,14 +34,14 @@ int DFRobot_A111::begin(Stream *_serial)
   delay(100);
 
   uint16_t pid=0;
-  if(0 != readData(A111_PID_REG, &pid, 1))   // Judge whether the data bus is successful
+  if(0 != readData(RS01_PID_REG, &pid, 1))   // Judge whether the data bus is successful
   {
     DBG("ERR_DATA_BUS");
     return ERR_DATA_BUS;
   }
 
   DBG("real sensor pid=");DBG(pid,HEX);
-  if(A111_PID != pid)   // Judge whether the chip version matches
+  if(RS01_PID != pid)   // Judge whether the chip version matches
   {
     DBG("ERR_IC_VERSION");
     return ERR_IC_VERSION;
@@ -52,28 +52,28 @@ int DFRobot_A111::begin(Stream *_serial)
 
 /***************** the sensor information read ******************************/
 
-int DFRobot_A111::refreshBasicInfo(void)
+int DFRobot_RS01::refreshBasicInfo(void)
 {
-  return readData(A111_PID_REG, (uint16_t *)&basicInfo, 6);
+  return readData(RS01_PID_REG, (uint16_t *)&basicInfo, 6);
 }
 
-int DFRobot_A111::refreshMeasurementData(void)
+int DFRobot_RS01::refreshMeasurementData(void)
 {
-  return readData(A111_TARGETS_NUMBER, dataBuf, 11);
+  return readData(RS01_TARGETS_NUMBER, dataBuf, 11);
 }
 
-int DFRobot_A111::refreshMeasurementConfig(void)
+int DFRobot_RS01::refreshMeasurementConfig(void)
 {
   return readData(MEASUREMENT_START_POSITION, (uint16_t *)&measurementConfig, 6);
 }
 
 /***************** the sensor basic information configuration ******************************/
 
-void DFRobot_A111::setADDR(uint16_t addr)
+void DFRobot_RS01::setADDR(uint16_t addr)
 {
   if((0x0001 <= addr) && (0x00F7 >= addr))
   {
-    uint8_t ret = writeData(A111_ADDR_REG, &addr, 1);
+    uint8_t ret = writeData(RS01_ADDR_REG, &addr, 1);
     if(ret){
       DBG(ret);
     }else{
@@ -83,9 +83,9 @@ void DFRobot_A111::setADDR(uint16_t addr)
   delay(100);
 }
 
-void DFRobot_A111::setBaudrateMode(eBaudrateMode_t mode)
+void DFRobot_RS01::setBaudrateMode(eBaudrateMode_t mode)
 {
-  uint8_t ret = writeData(A111_BAUDRATE_REG, &mode, 1);
+  uint8_t ret = writeData(RS01_BAUDRATE_REG, &mode, 1);
   if(ret){
     DBG(ret);
   }else{
@@ -95,9 +95,9 @@ void DFRobot_A111::setBaudrateMode(eBaudrateMode_t mode)
 }
 
 
-void DFRobot_A111::setCheckbitStopbit(uint16_t mode)
+void DFRobot_RS01::setCheckbitStopbit(uint16_t mode)
 {
-  uint8_t ret = writeData(A111_CHECKBIT_STOPBIT_REG, &mode, 1);
+  uint8_t ret = writeData(RS01_CHECKBIT_STOPBIT_REG, &mode, 1);
   if(ret){
     DBG(ret);
   }else{
@@ -109,7 +109,7 @@ void DFRobot_A111::setCheckbitStopbit(uint16_t mode)
 
 /***************** the sensor measurement parameters configuration ******************************/
 
-void DFRobot_A111::setAllMeasurementParameters(uint16_t startingPosition, uint16_t stopPosition,
+void DFRobot_RS01::setAllMeasurementParameters(uint16_t startingPosition, uint16_t stopPosition,
                                                   uint16_t initialThreshold, uint16_t endThreshold,
                                                   uint16_t moduleSensitivity, uint16_t comparisonOffset)
 {
@@ -154,17 +154,17 @@ void DFRobot_A111::setAllMeasurementParameters(uint16_t startingPosition, uint16
   delay(100);
 }
 
-void DFRobot_A111::restoreFactorySetting(void)
+void DFRobot_RS01::restoreFactorySetting(void)
 {
   uint16_t value = 0x0000;   // to zero out the register is a soft reset
-  if(writeData(A111_RESET_FACTORY, &value, 1)){
+  if(writeData(RS01_RESET_FACTORY, &value, 1)){
     DBG();
   }
 }
 
 /************ Initialization of modbus-RTU interfaces reading and writing ***********/
 
-uint8_t DFRobot_A111::readData(uint16_t reg, uint16_t * pBuf, uint8_t size)
+uint8_t DFRobot_RS01::readData(uint16_t reg, uint16_t * pBuf, uint8_t size)
 {
   if(NULL == pBuf)
   {
@@ -178,7 +178,7 @@ uint8_t DFRobot_A111::readData(uint16_t reg, uint16_t * pBuf, uint8_t size)
   return ret;
 }
 
-uint8_t DFRobot_A111::writeData(uint16_t reg, const void * pBuf, uint8_t size)
+uint8_t DFRobot_RS01::writeData(uint16_t reg, const void * pBuf, uint8_t size)
 {
   if(NULL == pBuf)
   {
