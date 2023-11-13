@@ -1,68 +1,47 @@
 /*!
  * @file  getModuleInfo.ino
- * @brief  Read all the register data from the sensor
- * @details  Experimental phenomenon: serial print sensor basic information, measurement parameters and measured data
+ * @brief  Get basic module information and measurement data
  * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license  The MIT License (MIT)
  * @author   [qsjhyy](yihuan.huang@dfrobot.com)
  * @version  V1.0
- * @date  2021-07-06
- * @url   https://github.com/DFRobot/DFRobot_RS01
+ * @date  2023-10-19
+ * @url   https://github.com/DFRobot/DFRobot_URMXX
  */
-#include <DFRobot_RS01.h>
-#if defined(ARDUINO_AVR_UNO)||defined(ESP8266)
-  #include <SoftwareSerial.h>
+#include <DFRobot_URMXX.h>
+
+ /* ------------------------------------------------------------------------------------------------
+ *   board   |    MCU      | Leonardo/Mega2560/M0 |   UNO    | ESP8266 | ESP32 |  microbit  |   m0  |
+ *    VCC    |   3.3V/5V   |        VCC           |   VCC    |   VCC   |  VCC  |     X      |  vcc  |
+ *    GND    |     GND     |        GND           |   GND    |   GND   |  GND  |     X      |  gnd  |
+ *    RX     |     TX      |     Serial1 TX1      |    3     |   5/D6  |  D2   |     X      |  tx1  |
+ *    TX     |     RX      |     Serial1 RX1      |    2     |   4/D7  |  D3   |     X      |  rx1  |
+ * -------------------------------------------------------------------------------------------------*/
+#if defined(ARDUINO_AVR_UNO) || defined(ESP8266)
+#include "SoftwareSerial.h"
+SoftwareSerial urmSerial(/*rx =*/2, /*tx =*/3);
+#else
+#define urmSerial Serial1
 #endif
 
-#define DEFAULT_DEVICE_ADDRESS 0x000E
-/**
- * DFRobot_RS01 constructor
- * addr: modbus slave address(range1~247)or broadcast address(0x00)
- * If it's configured a broadcast address, send a broadcast packet, and all slaves on bus will process it but not respond
- */
-DFRobot_RS01 sensor(/*addr =*/DEFAULT_DEVICE_ADDRESS);
-
-#if defined(ARDUINO_AVR_UNO)||defined(ESP8266)
-  SoftwareSerial mySerial(/*rx =*/4, /*tx =*/5);
-#endif
-
-
-/* Print measured data */
-void print_measure_data(int number, uint16_t distance, uint16_t intensity)
-{
-  Serial.print("target ");
-  Serial.print((number + 1) / 2);
-  Serial.print(" distance: ");
-  Serial.print(distance);
-  Serial.print("  ");
-  for(uint16_t i=distance/10; i>0; i--)
-    Serial.print("-");
-  Serial.println();
-
-  Serial.print("target ");
-  Serial.print((number + 1) / 2);
-  Serial.print(" intensity: ");
-  Serial.print(intensity);
-  Serial.print("  ");
-  for(uint16_t i=intensity/10; i>0; i--)
-    Serial.print("+");
-  Serial.println();
-}
-
+ /**
+  * DFRobot_URMXX constructor
+  * Depending on the sensor used, open the corresponding macro
+  * addr: modbus slave address(range1~247)or broadcast address(0x00)
+  * If it's configured a broadcast address, send a broadcast packet, and all slaves on bus will process it but not respond
+  */
+DFRobot_URM08 sensor(/*addr =*/URMXX_DEFAULT_ADDR);
+// DFRobot_URM12 sensor(/*addr =*/URMXX_DEFAULT_ADDR);
+// DFRobot_URM14 sensor(/*addr =*/URMXX_DEFAULT_ADDR);
+// DFRobot_URM15 sensor(/*addr =*/URMXX_DEFAULT_ADDR);
 
 void setup(void)
 {
   Serial.begin(115200);
-  Stream *_serial;
-#if defined(ARDUINO_AVR_UNO)||defined(ESP8266)
-  mySerial.begin(115200);   // Excessive baud rate of UNO soft serial port will makes communication unstable, 9600 is recommended
-  _serial = &mySerial;
-#elif defined(ESP32)
-  Serial1.begin(115200, SERIAL_8N1, /*rx =*/D3, /*tx =*/D2);
-  _serial = &Serial1;
+#if (defined ESP32)
+  urmSerial.begin(9600, SERIAL_8N1, /*rx =*/D3, /*tx =*/D2);
 #else
-  Serial1.begin(115200);
-  _serial = &Serial1;
+  urmSerial.begin(9600);
 #endif
 
   /**
@@ -70,133 +49,152 @@ void setup(void)
    * _serial Serial ports for communication, supporting hard and soft serial ports
    * returning 0 means reading succeeds
    */
-  while( NO_ERROR != sensor.begin(/*s =*/_serial) ){
+  while (NO_ERROR != sensor.begin(/*s =*/&urmSerial)) {
     Serial.println("Communication with device failed, please check connection");
     delay(3000);
   }
-  Serial.println("Begin ok!");
-  Serial.println();
-}
+  Serial.println("Begin ok!\n");
 
-void loop()
-{
-  Serial.println("-----------------read module basic information---------------------");
+  Serial.println("\n-----------------read module basic information---------------------");
   /**
    * retrieve the basic information from the sensor and buffer it into the basicInfo structure that stores information:
    * basicInfo structure members:
-   *     PID: module PID
    *     VID: module VID
+   *     PID: module PID
+   *     HARD_V: hardware revision number
+   *     SOFT_V: software revision number
    *     modbusAddr: module communication address
    *     baudrate: module baud rate
-   *     checkbit: check bit
    *     stopbit: stop bit
-   *     versions: firmware version number
+   *     checkbit: check bit
    * returning 0 means reading succeeds
    */
-  if(0 == sensor.refreshBasicInfo()){
-    /* Module PID, the default value is 0x01E9 (The highest two of 16-bit data are used to determine SKU type: 00: SEN, 01: DFR, 10: TEL, the next 14 are numbers.)(SEN0489) */
-    Serial.print("PID: 0x");
-    Serial.println(sensor.basicInfo.PID, HEX);
-
+  if (0 == sensor.refreshBasicInfo()) {
     /* Module VID, the default value is 0x3343(represent manufacturer is DFRobot) */
     Serial.print("VID: 0x");
     Serial.println(sensor.basicInfo.VID, HEX);
 
-    /* Module communication address, the default value is 0x000E, module device address(1~247) */
-    Serial.print("mailing address: ");
+    /* Module PID, corresponding product model */
+    Serial.print("PID: 0x");
+    Serial.println(sensor.basicInfo.PID, HEX);
+
+    /* hardware revision number: 0x1000 represents V1.0.0.0 */
+    Serial.print("HARD_V: 0x");
+    Serial.println(sensor.basicInfo.HARD_V, HEX);
+
+    /* software revision number: 0x1000 represents V1.0.0.0 */
+    Serial.print("SOFT_V: 0x");
+    Serial.println(sensor.basicInfo.SOFT_V, HEX);
+
+    /* Module communication address, module device address(1~247) */
+    Serial.print("communication address: ");
     Serial.println(sensor.basicInfo.modbusAddr);
 
-    /* Module baud rate, the default value is 0x0009:
+    /* Module baud rate, the default value is 0x0003:
      * 0x0001---2400  0x0002---4800  0x0003---9600  0x0004---14400  0x0005---19200
      * 0x0006---38400  0x0007---57600  0x0008---115200  0x0009---1000000 */
     Serial.print("baudrate: 0x");
     Serial.println(sensor.basicInfo.baudrate, HEX);
 
-    /* Module check bit and stop bit, the default value is 0x0001
-     * check bit: 0 is none; 1 is even; 2 is odd
-     * stop bit: 1bit; 2bit */
+    /* Module check bit and stop bit, the default value is 0x0003
+     * stop bit: 0.5bit; 1bit; 1.5bit; 2bit
+     * check bit: 0 is none; 1 is even; 2 is odd */
+    Serial.print("stop bit: ");
+    Serial.println((sensor.basicInfo.stopbit + 1) / 2.0);
     Serial.print("check bit: ");
     Serial.println(sensor.basicInfo.checkbit);
-    Serial.print("stop bit: ");
-    Serial.println(((sensor.basicInfo.stopbit & 0x00FF) + 1)/2);
 
-    /* Firmware version number: 0x1000 represents V1.0.0.0 */
-    Serial.print("versions: 0x");
-    Serial.println(sensor.basicInfo.versions, HEX);
-
-  }else{
+  } else {
     Serial.println("Failed to read basic information!!!");
   }
-  Serial.println();
 
-  Serial.println("-----------------read module measurement config--------------------");
-  /**
-   * Retrieve the currently configured parameters from the sensor and buffer it into the structure measurementConfig that stores information:
-   * measurementConfig structure members:
-   *     startPosition: current measurement start position set value
-   *     stopPosition: current measurement stop position set value
-   *     initialThreshold: current initial threshold set value
-   *     endThreshold: current end threshold set value
-   *     moduleSensitivity: current module sensitivity set value
-   *     comparisonOffset: current comparison offset set value
-   * returning 0 means reading succeeds
-   */
-  if(0 == sensor.refreshMeasurementConfig()){
-    /* current measurement start position set value, 0x0046~0x19C8, can't be greater than the stop position set value */
-    Serial.print("start position :  ");
-    Serial.println(sensor.measurementConfig.startPosition);
+  if (URM08_MODULE_PID != sensor.basicInfo.PID) {
+    Serial.println("-----------------read module configuration information--------------------");
+    /**
+     *  Gets the external compensation temperature of the current write
+     *  Returns floating point temperature data in degrees Celsius
+     */
+    float ExtTempC = sensor.getExternalTemperatureC();
+    Serial.print("External temperature : ");  Serial.print(ExtTempC);  Serial.println(" °C");
 
-    /* current measurement stop position set value, 0x0046~0x19C8, can't be less than the start position set value */
-    Serial.print("stop position :  ");
-    Serial.println(sensor.measurementConfig.stopPosition);
-
-    /* current initial threshold set value */
-    Serial.print("initial threshold : ");
-    Serial.println(sensor.measurementConfig.initialThreshold);
-
-    /* current end threshold set value */
-    Serial.print("end threshold : ");
-    Serial.println(sensor.measurementConfig.endThreshold);
-
-    /* current module sensitivity set value */
-    Serial.print("module sensitivity : ");
-    Serial.println(sensor.measurementConfig.moduleSensitivity);
-
-    /* current comparison offset set value */
-    Serial.print("comparison offset : ");
-    Serial.println(sensor.measurementConfig.comparisonOffset);
-
-  }else{
-    Serial.println("Failed to read measurement config!!!");
-  }
-  Serial.println();
-
-  Serial.println("------------------Read module measurement data---------------------");
-  /**
-   * re-read the measured data from the sensor and buffer it into the array dataBuf[11] that stores information:
-   *    dataBuf[0]: the number of objects currently detected
-   *    dataBuf[1]: measured distance to the first object; dataBuf[2]: measured intensity of the first object
-   *    dataBuf[3]: measured distance to the second object; dataBuf[4]: measured intensity of the second object
-   *    dataBuf[5]: measured distance to the third object; dataBuf[6]: measured intensity of the third object
-   *    dataBuf[7]: measured distance to the fourth object; dataBuf[8]: measured intensity of the fourth object
-   *    dataBuf[9]: measured distance to the fifth object; dataBuf[10]: measured intensity of the fifth object
-   * returning 0 means reading succeeds
-   */
-  if(0 == sensor.refreshMeasurementData()){
-    /*the number of objects currently detected*/
-    Serial.print("target amount:  ");
-    Serial.println(sensor.dataBuf[0]);
-    Serial.println();
-
-    /*measured data*/
-    for(int i=1; i<11; i+=2){
-      print_measure_data(i, sensor.dataBuf[i], sensor.dataBuf[i+1]);
+    /**
+     *  Gets the current control register value
+     *  sURMXXConfig_t:
+     *    configRet.tempCompSource : eInternalTemp: use onboard temperature compensation,  eExternalTemp: use external temperature compensation work
+     *                            (requires user to write temperature data to external temperature compensation data register)
+     *    configRet.tempCompMode : eTempCompEN: enable temperature compensation,  eTempCompDIS: disable temperature compensation
+     *    configRet.autoMeasureMode : eAutoMeasureMode: auto measuring distance,  ePassiveMeasureMode: passive measuring distance
+     *    configRet.trigPasvMeasure : In passive mode, write 1 to the bit and the sensor will complete a distance measurement (about 300ms).
+     *    configRet.reserved : reserved bit
+     */
+    DFRobot_URMXX::sURMXXConfig_t configRet = sensor.getControlRegister();
+    if (sensor.eInternalTemp == configRet.tempCompSource) {
+      Serial.println("Use onboard temperature compensation.");
+    } else {
+      Serial.println("Use external temperature compensation work.");
     }
-
-  }else{
-    Serial.println("Failed to read measurement data!!!");
+    if (sensor.eTempCompEN == configRet.tempCompMode) {
+      Serial.println("Enable temperature compensation.");
+    } else {
+      Serial.println("Disable temperature compensation.");
+    }
+    if (sensor.eAutoMeasureMode == configRet.autoMeasureMode) {
+      Serial.println("Auto measuring distance.");
+    } else {
+      Serial.println("Passive measuring distance.");
+    }
   }
 
-  Serial.println("\n");
-  delay(3000);
+}
+
+void loop()
+{
+  Serial.println("\n-----------------read module measurement data--------------------");
+  /**
+   * Get distance measurement data
+   * Returns 16 bits of distance data
+   *   URM08 : U: 1 cm, R: 35~550 cm, F: 38~42KHz, DC: 6~12 V, T: 1000/10 ms
+   *   URM12 : U: 1 cm, R: 70~1500 cm, F: 38~42KHz, DC: 9~24 V, T: 1000/3 ms
+   *   URM14 : U: 0.1 mm, R: 100~1500 mm, F: 200±4KHz, DC: 7~15 V, T: 1000/30 ms
+   *   URM15 : U: 0.1 cm, R: 30~500 cm, F: 75±2KHz, DC: 5~12 V, T: 1000/10ms
+   */
+  uint16_t distanceRaw = sensor.getDistanceRaw();
+  Serial.print("Distance : ");
+  switch (sensor.basicInfo.PID) {
+  case URM08_MODULE_PID:
+    Serial.print(distanceRaw * 1); Serial.println(" cm");
+    break;
+  case URM12_MODULE_PID:
+    Serial.print(distanceRaw * 1); Serial.println(" cm");
+    break;
+  case URM14_MODULE_PID:
+    Serial.print(distanceRaw * 0.1); Serial.println(" mm");
+    break;
+  case URM15_MODULE_PID:
+    Serial.print(distanceRaw * 0.1); Serial.println(" cm");
+    break;
+  default:
+    Serial.println(distanceRaw);
+    break;
+  }
+
+  /**
+   * Obtain temperature measurement data, unit is celsius
+   */
+  float temperatureC = sensor.getTemperatureC();
+  Serial.print("Temperature : ");  Serial.print(temperatureC);  Serial.println(" °C");
+
+  if (URM14_MODULE_PID == sensor.basicInfo.PID) {
+    Serial.println("-----------------read module power supply noise level--------------------");
+    /**
+     * Get the power supply noise level.
+     * This parameter reflects the degree of influence of the power supply and environment on the sensor.
+     *   The smaller the noise level, the more accurate the distance value obtained by the sensor.
+     * uint8_t 0x00-0x0A corresponds to noise levels 0-10.
+     */
+    uint8_t noise = sensor.getNoiseLevel();
+    Serial.print("Power supply noise level : ");  Serial.println(noise);
+  }
+
+  delay(1000);
 }

@@ -1,30 +1,47 @@
 #######################################
-# Syntax Coloring Map For DFRobot_RS01
+# Syntax Coloring Map For DFRobot_URMXX
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-DFRobot_RS01	KEYWORD1
+DFRobot_URMXX	KEYWORD1
+DFRobot_URM08	KEYWORD1
+DFRobot_URM12	KEYWORD1
+DFRobot_URM14	KEYWORD1
+DFRobot_URM15	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
 begin	KEYWORD2
+getDistanceRaw	KEYWORD2
+getTemperatureC	KEYWORD2
 refreshBasicInfo	KEYWORD2
-refreshMeasurementData	KEYWORD2
-refreshMeasurementConfig	KEYWORD2
 setADDR	KEYWORD2
 setBaudrateMode	KEYWORD2
 setCheckbitStopbit	KEYWORD2
-setAllMeasurementParameters	KEYWORD2
-restoreFactorySetting	KEYWORD2
+setExternalTemperatureC	KEYWORD2
+getExternalTemperatureC	KEYWORD2
+setControlRegister	KEYWORD2
+getControlRegister	KEYWORD2
+getNoiseLevel	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
 #######################################
+
+basicInfo	LITERAL1
+PID	LITERAL1
+VID	LITERAL1
+HARD_V	LITERAL1
+SOFT_V	LITERAL1
+modbusAddr	LITERAL1
+baudrate	LITERAL1
+stopbit	LITERAL1
+checkbit	LITERAL1
 
 eBaudrate2400	LITERAL1
 eBaudrate4800	LITERAL1
@@ -38,21 +55,21 @@ eBaudrate_1000000	LITERAL1
 eCheckBitNone	LITERAL1
 eCheckBitEven	LITERAL1
 eCheckBitOdd	LITERAL1
+eStopBit0p5	LITERAL1
 eStopBit1	LITERAL1
+eStopBit1p5	LITERAL1
 eStopBit2	LITERAL1
-dataBuf	LITERAL1
-basicInfo	LITERAL1
-measurementConfig	LITERAL1
-PID	LITERAL1
-VID	LITERAL1
-modbusAddr	LITERAL1
-baudrate	LITERAL1
-checkbit	LITERAL1
-stopbit	LITERAL1
-versions	LITERAL1
-startPosition	LITERAL1
-stopPosition	LITERAL1
-initialThreshold	LITERAL1
-endThreshold	LITERAL1
-moduleSensitivity	LITERAL1
-comparisonOffset	LITERAL1
+
+tempCompSource	LITERAL1
+tempCompMode	LITERAL1
+autoMeasureMode	LITERAL1
+trigPasvMeasure	LITERAL1
+reserved	LITERAL1
+
+eInternalTemp	LITERAL1
+eExternalTemp	LITERAL1
+eTempCompEN	LITERAL1
+eTempCompDIS	LITERAL1
+eAutoMeasureMode	LITERAL1
+ePassiveMeasureMode	LITERAL1
+eTrigPassiveMeasure	LITERAL1
