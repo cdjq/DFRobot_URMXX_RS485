@@ -43,7 +43,7 @@ void setup(void)
   // After the sensor serial port configuration is modified and the sensor is restarted, 
   // reconfigure the following serial port initialization parameters based on the modified values
 #if (defined ESP32)
-  urmSerial.begin(9600, SERIAL_8N1, /*rx =*/D3, /*tx =*/D2);
+  urmSerial.begin(9600, SERIAL_8N2, /*rx =*/D3, /*tx =*/D2);
 #else
   urmSerial.begin(9600);
 #endif

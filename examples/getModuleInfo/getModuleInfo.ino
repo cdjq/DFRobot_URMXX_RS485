@@ -23,15 +23,15 @@ SoftwareSerial urmSerial(/*rx =*/2, /*tx =*/3);
 #else
 #define urmSerial Serial1
 #endif
-
+char data[100];
  /**
   * DFRobot_URMXX constructor
   * Depending on the sensor used, open the corresponding macro
   * addr: modbus slave address(range1~247)or broadcast address(0x00)
   * If it's configured a broadcast address, send a broadcast packet, and all slaves on bus will process it but not respond
   */
-DFRobot_URM08 sensor(/*addr =*/URMXX_DEFAULT_ADDR);
-// DFRobot_URM12 sensor(/*addr =*/URMXX_DEFAULT_ADDR);
+//DFRobot_URM08 sensor(/*addr =*/URMXX_DEFAULT_ADDR);
+ DFRobot_URM12 sensor(/*addr =*/URMXX_DEFAULT_ADDR);
 // DFRobot_URM14 sensor(/*addr =*/URMXX_DEFAULT_ADDR);
 // DFRobot_URM15 sensor(/*addr =*/URMXX_DEFAULT_ADDR);
 
@@ -39,7 +39,7 @@ void setup(void)
 {
   Serial.begin(115200);
 #if (defined ESP32)
-  urmSerial.begin(9600, SERIAL_8N1, /*rx =*/D3, /*tx =*/D2);
+  urmSerial.begin(9600, SERIAL_8N2, /*rx =*/D3, /*tx =*/D2);
 #else
   urmSerial.begin(9600);
 #endif
@@ -53,8 +53,9 @@ void setup(void)
     Serial.println("Communication with device failed, please check connection");
     delay(3000);
   }
+  delay(3000);
   Serial.println("Begin ok!\n");
-
+  
   Serial.println("\n-----------------read module basic information---------------------");
   /**
    * retrieve the basic information from the sensor and buffer it into the basicInfo structure that stores information:
@@ -71,20 +72,22 @@ void setup(void)
    */
   if (0 == sensor.refreshBasicInfo()) {
     /* Module VID, the default value is 0x3343(represent manufacturer is DFRobot) */
-    Serial.print("VID: 0x");
-    Serial.println(sensor.basicInfo.VID, HEX);
+    
+    sprintf(data,"VID: 0x%04X\n",sensor.basicInfo.VID);
+    Serial.println(data);
 
     /* Module PID, corresponding product model */
-    Serial.print("PID: 0x");
-    Serial.println(sensor.basicInfo.PID, HEX);
+
+    sprintf(data,"PID: 0x%04X\n",sensor.basicInfo.PID);
+    Serial.println(data);
 
     /* hardware revision number: 0x1000 represents V1.0.0.0 */
-    Serial.print("HARD_V: 0x");
-    Serial.println(sensor.basicInfo.HARD_V, HEX);
+    sprintf(data,"HARD_V: 0x%04X\n",sensor.basicInfo.HARD_V);
+    Serial.println(data);
 
     /* software revision number: 0x1000 represents V1.0.0.0 */
-    Serial.print("SOFT_V: 0x");
-    Serial.println(sensor.basicInfo.SOFT_V, HEX);
+    sprintf(data,"SOFT_V: 0x%04X\n",sensor.basicInfo.SOFT_V);
+    Serial.println(data);
 
     /* Module communication address, module device address(1~247) */
     Serial.print("communication address: ");
@@ -93,9 +96,10 @@ void setup(void)
     /* Module baud rate, the default value is 0x0003:
      * 0x0001---2400  0x0002---4800  0x0003---9600  0x0004---14400  0x0005---19200
      * 0x0006---38400  0x0007---57600  0x0008---115200  0x0009---1000000 */
-    Serial.print("baudrate: 0x");
-    Serial.println(sensor.basicInfo.baudrate, HEX);
-
+  
+    sprintf(data,"baudrate: 0x%04X\n",sensor.basicInfo.baudrate);
+    Serial.println(data);
+    
     /* Module check bit and stop bit, the default value is 0x0003
      * stop bit: 0.5bit; 1bit; 1.5bit; 2bit
      * check bit: 0 is none; 1 is even; 2 is odd */
