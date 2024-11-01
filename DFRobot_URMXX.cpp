@@ -1,11 +1,11 @@
 /*!
  * @file  DFRobot_URMXX.cpp
  * @brief  Define the infrastructure DFRobot_URMXX class
- * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @copyright  Copyright (c) 2024 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license  The MIT License (MIT)
  * @author   [qsjhyy](yihuan.huang@dfrobot.com)
  * @version  V1.0
- * @date  2021-07-06
+ * @date  2021-11-01
  * @url   https://github.com/DFRobot/DFRobot_URMXX
  */
 #include "DFRobot_URMXX.h"

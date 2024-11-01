@@ -1,11 +1,11 @@
 /*!
  * @file  getModuleInfo.ino
  * @brief  Get basic module information and measurement data
- * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @copyright  Copyright (c) 2024 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license  The MIT License (MIT)
  * @author   [qsjhyy](yihuan.huang@dfrobot.com)
  * @version  V1.0
- * @date  2023-10-19
+ * @date  2024-11-01
  * @url   https://github.com/DFRobot/DFRobot_URMXX
  */
 #include <DFRobot_URMXX.h>

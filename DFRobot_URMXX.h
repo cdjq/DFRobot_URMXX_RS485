@@ -2,11 +2,11 @@
  * @file  DFRobot_URMXX.h
  * @brief  Define infrastructure of DFRobot_URMXX class
  * @details  Get and configure the sensor basic information and measurement parameters, and the sensor measurement information
- * @copyright  Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @copyright  Copyright (c) 2024 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license  The MIT License (MIT)
  * @author  [qsjhyy](yihuan.huang@dfrobot.com)
  * @version  V1.0
- * @date  2023-10-18
+ * @date  2024-11-01
  * @url  https://github.com/DFRobot/DFRobot_URMXX
  */
 #ifndef __DFROBOT_URMXX_H__
